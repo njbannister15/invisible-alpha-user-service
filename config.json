@@ -1,0 +1,4 @@
+{  
+  "audience": "nodejs-jwt-auth",
+  "issuer": "https://invisible-alpha.com"
+}
