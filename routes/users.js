@@ -8,6 +8,9 @@ var config = require('../config');
 
 const uuidv4 = require('uuid/v4');
 
+var redis = require("redis"),
+  client = redis.createClient();
+
 var opts = {
   secretOrKey: process.env.SECRET
 }
@@ -36,7 +39,7 @@ router.post('/authenticate', (req, res, next) => {
             .send({error: "Error in BCrypt compare"});
         } else if (result == true) {
 
-          var token = jwt.sign({             
+          var token = jwt.sign({
             data: {
               email: user.email,
               firstName: user.firstName,
@@ -51,7 +54,7 @@ router.post('/authenticate', (req, res, next) => {
           var apiSecret = uuidv4();
           var jti = uuidv4();
           var access = jwt.sign({
-            scope: user.roles,            
+            scope: user.roles
           }, apiSecret, {
             issuer: config.issuer,
             audience: config.audience,
@@ -60,8 +63,7 @@ router.post('/authenticate', (req, res, next) => {
             subject: user.email
           });
 
-          debug(token);
-          debug(access);
+          client.set(jti, apiSecret, 'EX', 3600);
 
           return res.json({message: "ok", id_token: token, access_token: access});
         } else {
