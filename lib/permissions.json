@@ -1,0 +1,31 @@
+{
+  "permisions": [
+    "all",
+    "create",
+    "read",
+    "update",
+    "delete"
+  ],
+  "services": [
+    "users",
+    "jobs"
+  ],
+  "roles": {
+    "ADMIN": {
+      "users": [
+        "all"
+      ],
+      "jobs": [
+        "all"
+      ]
+    },
+    "CLTUSER": {
+      "users": [
+        "all"
+      ],
+      "jobs": [
+        "all"
+      ]
+    }
+  }
+}

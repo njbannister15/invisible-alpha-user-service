@@ -1,0 +1,161 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Calhoun Trucking Line API
+  contact:
+    name: Nicholas Bannister
+    email: nbannister@7mbtech.com
+# during dev, should point to your local machine
+host: localhost:3000
+# basePath prefixes all resource paths
+basePath: /
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /authenticate:
+    # binds swagger app logic to a route
+    x-swagger-router-controller: Users
+    post:
+      tags:
+        - "Users"
+      description: Authenticate a user and return tokens
+      # used as the method name of the controller
+      operationId: authenticate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: The user to authenticate
+          schema:
+            $ref: "#/definitions/UserAuthenticateBody" 
+      responses:
+        200:
+          description: Success
+        500:
+          description: Success
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: Success
+          schema:
+            $ref: "#/definitions/Error"
+  /signup:
+    # binds swagger app logic to a route
+    x-swagger-router-controller: Users
+    post:
+      tags:
+        - "Users"
+      description: Signup a user
+      # used as the method name of the controller
+      operationId: signup
+      consumes:
+        - multipart/form-data
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: The user to authenticate
+          schema:
+            $ref: "#/definitions/UserSignupBody" 
+      responses:
+        200:
+          description: Success
+        500:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: Unauthorized
+          schema:
+            $ref: "#/definitions/Error"
+  /users:
+    x-swagger-router-controller: Users
+    get:
+      parameters: 
+        - in: header
+          name: Authorization
+          description: JWT auth header object
+          required: true
+          type: string
+      operationId: getUsers
+      tags:
+        - "Users"
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A list of users.
+  /users/{userId}:
+    x-swagger-router-controller: Users
+    get:
+      parameters:
+        - in: path
+          name: userId
+          description: ID of pet that needs to be fetched
+          required: true
+          type: string
+        - in: header
+          name: Authorization
+          description: JWT auth header object
+          required: true
+          type: string
+      operationId: getUser
+      tags:
+        - "Users"
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A list of users.
+definitions:
+  UserAuthenticateBody:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        example: "njbannister15@gmail.com"
+      password:
+        type: string
+        example: "password@1"
+  UserSignupBody:
+    type: object
+    required:
+      - firstName
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        example: "njbannister15@gmail.com"
+      password:
+        type: string
+        example: "password@1"
+      firstName:
+        type: string
+        example: "Nicholas"
+      lastName:
+        type: string
+        example: "Bannister"
+  Error:
+    type: object
+    required:
+      - error
+    properties:
+      error:
+        type: string
